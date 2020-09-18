@@ -126,14 +126,18 @@ that can contain process and observation-error as well as state-space models tha
  % that implements forward simulations while minimizing an objective function (negative log-likelihood) that measures the diﬀerence between the model and data. Discrepancies between model and data are presented as a likelihood score for each time period and model component. %Gadget structure and options are described in detail at \citet{begley_overview_2004}.
 
  
- The general SPiCT model description and all the options available can be found in \cite{Pedersen17}, as well as a user guide available at \url{https://github.com/mawp/spict/raw/master/spict/vignettes/vignette.pdf}. %Some specific examples can be found in \textbf{TOBIAS and ALEX please help with some references and please add whatever you consider important to mention} 
+ The general SPiCT model description and all the options available can be found in \cite{Pedersen17}, as well as a user guide available at \url{https://github.com/DTUAqua/spict/raw/master/spict/inst/doc/spict_manual.pdf}. The version of the model including seasonal productivity is described in detail in \citet{Mildenberger19}. %Some specific examples can be found in \textbf{TOBIAS and ALEX please help with some references and please add whatever you consider important to mention} 
 
 
 <<eval = T, echo = F, results= hide,fig=false>>=
 library(devtools)
 library(repmis)
+#setwd("~/SPiCt/spict_2020")
 #install_github("mawp/spict/spict") esta no
 #install_github("tokami/spict/spict", ref="tvp_blim") #esta si, es la seasonal branch
+#install_github("tokami/spict/spict", ref="seaprodTVP")
+
+require(ggplot2)
 require(spict)
 
 source_data("https://github.com/mmrinconh/SPiCt/blob/master/anchovydata.Rdata?raw=True")
@@ -156,12 +160,19 @@ inp <- check.inp(anchovy9aSouth)
 #fit1<-res
 #save(fit1,file="fit1.Rdata")
 # #######################################
+#fit1 está en un folder local porque es muy grande y el github no lo admite! Folder local: 
+#setwd("~/Back up de MIPC/Documentos/TEXdocuments/SPICT9a_South/spict2020")
+#setwd("~/Back up de MIPC/Documentos/TEXdocuments/SPICT9a_South/spict2020/lastbranch_092020")
+
   load("fit1.Rdata")
 #   # sp1<-plot(fit1)
 pdf("scenario1out.pdf",width=7.27, height=8)
    plot(fit1)
 # #   # #print(sp1)
    dev.off()
+   
+   #res <- retro(fit1, nretroyear = 2)
+   #plotspict.retro(res)
 fit1 <- calc.osa.resid(fit1)
 #diag1<-plotspict.diagnostic(fit1)
     pdf("scenario1diag.pdf",width=12, height=12)
@@ -171,7 +182,8 @@ fit1 <- calc.osa.resid(fit1)
 pdf("data.pdf",width=5.27, height=5.27)
     plotspict.data(anchovy9aSouth)
     dev.off()
-# 
+    
+ ggsave("dataplot.jpg",plotspict.data(anchovy9aSouth), width = 5.27, height = 5.27, units = c("in", "cm", "mm"))
 anchovy9aSouth$seaprod <- 3
 # ####################################
 #res <- fit.spict(anchovy9aSouth)
@@ -193,15 +205,15 @@ dev.off()
 anchovy9aSouth$seaprod <- 0
   anchovy9aSouth$timevaryinggrowth = TRUE
 #  ################################33
-  #res <- fit.spict(anchovy9aSouth)
+#res <- fit.spict(anchovy9aSouth)
 #fit3a<-res
-  #save(fit3a,file="fit3a.Rdata")
+#save(fit3a,file="fit3a.Rdata")
 #  ############################
  load("fit3a.Rdata")
-pdf("scenario3out.pdf",width=12, height=12)
-plot(fit3a)
-#   # #print(sp1)
-dev.off()
+# pdf("scenario3out.pdf",width=12, height=12)
+# plot(fit3a)
+# #   # #print(sp1)
+# dev.off()
 
 # 
 # 
@@ -210,7 +222,7 @@ fit3a <- calc.osa.resid(fit3a)
  pdf("scenario3diag.pdf",width=12, height=12)
     plotspict.diagnostic(fit3a)
     dev.off()
-#   #
+#   
 #   #
 anchovy9aSouth$obsC<-anchovy9aSouth$obsC[40:length(anchovy9aSouth$obsC)]
   anchovy9aSouth$timeC<-anchovy9aSouth$timeC[40:length(anchovy9aSouth$timeC)]
@@ -235,7 +247,7 @@ pdf("scenario4diag.pdf",width=7.27, height=8)
 
 
 \section{Data and priors }
-Quarterly catches time series from 1989 to the second quarter of 2019. For the first two quarters of year 2019, provisional catches estimations of Spanish (until May 27th) purse-seine fleet were used and catches for June were estimated as the 37\% of January to May catches based on historical records from 2009 to 2018. There were not any catches for Portuguese purse-seine in these two quarters. ECOCADIZ and PELAGO acoustic survey biomass indexes were provided at the exact time of the year when the surveys were carried out.For ECOCADIZ that corresponds to March of 2004 and 2006, April of 2007, 2009, 2010, 2014-2018, and May of 2013, and for PELAGO to February of 1998, 2000-2002 and April of 2005-2010, 2013-2019. Data summary is presented in Figure \ref{spdata}.
+Quarterly catches time series from 1989 to the second quarter of 2020. For the first two quarters of year 2020, provisional catches estimations of Spanish (until May 18th) purse-seine fleet were used and catches for June were estimated as the \textbf{38\%} of January to May catches based on historical records from 2009 to \textbf{2019}. There were not any catches for Portuguese purse-seine in these two quarters. ECOCADIZ and PELAGO acoustic survey biomass indexes were provided at the exact time of the year when the surveys were carried out. For ECOCADIZ that corresponds to March of 2004 and 2006, April of 2007, 2009, 2010, 2014-2019, and May of 2013, and for PELAGO to February of 1998, 2000-2002 and April of 2005-2010, 2013-2020. Data summary is presented in Figure \ref{spdata}.
 
 Priors for parameters were set to default.
 
@@ -349,13 +361,13 @@ Most important outputs for scenario 3 are displayed in figure \ref{scenario3out}
 @
 
 
-\begin{figure}[h!]
- \centering
- \includegraphics[]{./scenario3out.pdf}
- % lendist.pdf: 667x841 pixel, 72dpi, 23.53x29.67 cm, bb=0 0 667 841
- \caption{Summary of SPiCt results for scenario 3}
- \label{scenario3out}
-\end{figure}
+% \begin{figure}[h!]
+%  \centering
+%  \includegraphics[]{./scenario3out.pdf}
+%  % lendist.pdf: 667x841 pixel, 72dpi, 23.53x29.67 cm, bb=0 0 667 841
+%  \caption{Summary of SPiCt results for scenario 3}
+%  \label{scenario3out}
+% \end{figure}
 
 \begin{figure}[h!]
  \centering
@@ -396,6 +408,14 @@ Most important outputs for scenario 4 are displayed in figure \ref{scenario4out}
 \end{figure}
 
 \clearpage
+\section{Scenario 1 detailed model output}
+According to the previous plots, scenario 1 results are more consistent regarding uncertainty intervals and diagnostics, thus more detailed information about its output is presented 
+
+<<eval = T, echo = T, fig=F,warning=F>>=
+summary(fit1)
+@
+
+
 \section{Comparison of harvestable biomass estimation obtained in scenario 1 with harvestable biomass estimated by Gadget}
 
 <<eval = T, echo = F, fig=F,warning=F>>=
@@ -476,6 +496,12 @@ ggsave("comparison_abs.jpg",compareabs, width = 9.2, height = 6.27, units = c("i
 ggsave("comparison_abs_biospict_gadgetcatches.pdf",compareabsbiovscatches, width = 9.2, height = 6.27, units = c("in", "cm", "mm"))
 ggsave("comparison_abs_biospict_gadgetcatches.jpg",compareabsbiovscatches, width = 9.2, height = 6.27, units = c("in", "cm", "mm"))
 @
+
+
+
+
+
+
 Figures \ref{comp_abs} and \ref{comp} show model comparison estimates of absolute (in tonnes) and relative harvestable biomass at the end of the second quarter, respectively. The models used for this comparison are, the SPiCt scenario 1  and the Gadget model used in the latest anchovy 9a South assessment \citep{Rincon20}. The data used for the SPiCt scenario was also the same used in this assessment. In Figure \ref{comp_abs} it can be observed that the two models present different trends mostly before 2005 (the year when PELAGO survey starts). A comparison between SPiCt estimates of harvestable biomass with catches time series (Figure \ref{spict_catches}) suggest that catches time series have a big influence on the SPiCT estimates.
 \begin{figure}[h!]
  \centering

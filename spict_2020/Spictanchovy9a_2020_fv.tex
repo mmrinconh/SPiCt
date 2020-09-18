@@ -127,13 +127,13 @@ that can contain process and observation-error as well as state-space models tha
  % that implements forward simulations while minimizing an objective function (negative log-likelihood) that measures the diﬀerence between the model and data. Discrepancies between model and data are presented as a likelihood score for each time period and model component. %Gadget structure and options are described in detail at \citet{begley_overview_2004}.
 
  
- The general SPiCT model description and all the options available can be found in \cite{Pedersen17}, as well as a user guide available at \url{https://github.com/mawp/spict/raw/master/spict/vignettes/vignette.pdf}. %Some specific examples can be found in \textbf{TOBIAS and ALEX please help with some references and please add whatever you consider important to mention} 
+ The general SPiCT model description and all the options available can be found in \cite{Pedersen17}, as well as a user guide available at \url{https://github.com/DTUAqua/spict/raw/master/spict/inst/doc/spict_manual.pdf}. The version of the model including seasonal productivity is described in detail in \citet{Mildenberger19}. %Some specific examples can be found in \textbf{TOBIAS and ALEX please help with some references and please add whatever you consider important to mention} 
 
 
 
 
 \section{Data and priors }
-Quarterly catches time series from 1989 to the second quarter of 2019. For the first two quarters of year 2019, provisional catches estimations of Spanish (until May 27th) purse-seine fleet were used and catches for June were estimated as the 37\% of January to May catches based on historical records from 2009 to 2018. There were not any catches for Portuguese purse-seine in these two quarters. ECOCADIZ and PELAGO acoustic survey biomass indexes were provided at the exact time of the year when the surveys were carried out.For ECOCADIZ that corresponds to March of 2004 and 2006, April of 2007, 2009, 2010, 2014-2018, and May of 2013, and for PELAGO to February of 1998, 2000-2002 and April of 2005-2010, 2013-2019. Data summary is presented in Figure \ref{spdata}.
+Quarterly catches time series from 1989 to the second quarter of 2020. For the first two quarters of year 2020, provisional catches estimations of Spanish (until May 18th) purse-seine fleet were used and catches for June were estimated as the \textbf{38\%} of January to May catches based on historical records from 2009 to \textbf{2019}. There were not any catches for Portuguese purse-seine in these two quarters. ECOCADIZ and PELAGO acoustic survey biomass indexes were provided at the exact time of the year when the surveys were carried out. For ECOCADIZ that corresponds to March of 2004 and 2006, April of 2007, 2009, 2010, 2014-2019, and May of 2013, and for PELAGO to February of 1998, 2000-2002 and April of 2005-2010, 2013-2020. Data summary is presented in Figure \ref{spdata}.
 
 Priors for parameters were set to default.
 
@@ -222,13 +222,13 @@ Most important outputs for scenario 3 are displayed in figure \ref{scenario3out}
 
 
 
-\begin{figure}[h!]
- \centering
- \includegraphics[]{./scenario3out.pdf}
- % lendist.pdf: 667x841 pixel, 72dpi, 23.53x29.67 cm, bb=0 0 667 841
- \caption{Summary of SPiCt results for scenario 3}
- \label{scenario3out}
-\end{figure}
+% \begin{figure}[h!]
+%  \centering
+%  \includegraphics[]{./scenario3out.pdf}
+%  % lendist.pdf: 667x841 pixel, 72dpi, 23.53x29.67 cm, bb=0 0 667 841
+%  \caption{Summary of SPiCt results for scenario 3}
+%  \label{scenario3out}
+% \end{figure}
 
 \begin{figure}[h!]
  \centering
@@ -260,7 +260,89 @@ Most important outputs for scenario 4 are displayed in figure \ref{scenario4out}
 \end{figure}
 
 \clearpage
+\section{Scenario 1 detailed model output}
+According to the previous plots, scenario 1 results are more consistent regarding uncertainty intervals and diagnostics, thus more detailed information about its output is presented 
+
+\begin{Schunk}
+\begin{Sinput}
+> summary(fit1)
+\end{Sinput}
+\begin{Soutput}
+Convergence: 0  MSG: relative convergence (4)
+Objective function at optimum: 191.5553781
+Euler time step (years):  1/16 or 0.0625
+Nobs C: 126,  Nobs I1: 18,  Nobs I2: 12
+
+Residual diagnostics (p-values)
+    shapiro   bias    acf   LBox shapiro bias acf LBox  
+ C   0.0000 0.8860 0.1848 0.4021     ***    -   -    -  
+ I1  0.4969 0.5486 0.0474 0.1429       -    -   *    -  
+ I2  0.7333 0.5877 0.4134 0.8189       -    -   -    -  
+
+Priors
+     logn  ~  dnorm[log(2), 2^2]
+ logalpha  ~  dnorm[log(1), 2^2]
+  logbeta  ~  dnorm[log(1), 2^2]
+
+Model parameter estimates w 95% CI 
+            estimate        cilow        ciupp    log.est  
+ alpha1    0.1500161    0.0263926 8.526944e-01 -1.8970130  
+ alpha2    0.2581998    0.0691201 9.645113e-01 -1.3540214  
+ beta      1.9976305    0.8534965 4.675506e+00  0.6919617  
+ r         5.5785227    1.7461581 1.782193e+01  1.7189240  
+ rc        6.7973357    3.0766562 1.501753e+01  1.9165307  
+ rold      8.6976185    3.7445113 2.020252e+01  2.1630492  
+ m      7573.7985299 4864.6661424 1.179165e+04  8.9324500  
+ K      4825.5323568 2080.7202763 1.119120e+04  8.4816763  
+ q1        8.0511334    3.5635780 1.818979e+01  2.0858129  
+ q2        6.2595990    2.6129244 1.499568e+01  1.8341161  
+ n         1.6413851    0.9472899 2.844055e+00  0.4955404  
+ sdb       1.2003848    0.6501406 2.216326e+00  0.1826422  
+ sdf       0.3130694    0.1375802 7.124024e-01 -1.1613303  
+ sdi1      0.1800770    0.0363820 8.913131e-01 -1.7143708  
+ sdi2      0.3099392    0.1029656 9.329548e-01 -1.1713792  
+ sdc       0.6253970    0.4919972 7.949667e-01 -0.4693686  
+ phi1      0.0819407    0.0386710 1.736256e-01 -2.5017597  
+ phi2      0.3789405    0.1822619 7.878550e-01 -0.9703760  
+ phi3      1.0525103    0.4532576 2.444036e+00  0.0511781  
+ 
+Deterministic reference points (Drp)
+          estimate       cilow        ciupp  log.est  
+ Bmsyd 2228.460940 1032.323330  4810.545318 7.709066  
+ Fmsyd    3.398668    1.538328     7.508764 1.223383  
+ MSYd  7573.798530 4864.666142 11791.646640 8.932450  
+Stochastic reference points (Srp)
+          estimate       cilow        ciupp  log.est rel.diff.Drp  
+ Bmsys 2039.821232 1216.082809  3421.535628 7.620617  -0.09247855  
+ Fmsys    4.531853    2.822374     7.276742 1.511131   0.25004892  
+ MSYs  9457.933044 5493.907566 16282.126408 9.154609   0.19921208  
+
+States w 95% CI (inp$msytype: s)
+                    estimate        cilow        ciupp    log.est  
+ B_2020.50      4069.6356432 1179.4259659 1.404237e+04  8.3113088  
+ F_2020.50         1.4445672    0.4326156 4.823622e+00  0.3678098  
+ B_2020.50/Bmsy    1.9950943    0.7929830 5.019529e+00  0.6906913  
+ F_2020.50/Fmsy    0.3187586    0.1070864 9.488324e-01 -1.1433211  
+
+Predictions w 95% CI (inp$msytype: s)
+                  prediction       cilow        ciupp    log.est  
+ B_2020.75      2844.3262034 690.0175239 1.172462e+04  7.9530815  
+ F_2020.75         1.4438795   0.4171718 4.997433e+00  0.3673336  
+ B_2020.75/Bmsy    1.3943997   0.4571585 4.253121e+00  0.3324640  
+ F_2020.75/Fmsy    0.3186069   0.1029483 9.860323e-01 -1.1437973  
+ Catch_2020.75  1453.1820191 629.9886794 3.352025e+03  7.2815109  
+ E(B_inf)       3381.8325751          NA           NA  8.1261730  
+\end{Soutput}
+\end{Schunk}
+
+
 \section{Comparison of harvestable biomass estimation obtained in scenario 1 with harvestable biomass estimated by Gadget}
+
+
+
+
+
+
 
 Figures \ref{comp_abs} and \ref{comp} show model comparison estimates of absolute (in tonnes) and relative harvestable biomass at the end of the second quarter, respectively. The models used for this comparison are, the SPiCt scenario 1  and the Gadget model used in the latest anchovy 9a South assessment \citep{Rincon20}. The data used for the SPiCt scenario was also the same used in this assessment. In Figure \ref{comp_abs} it can be observed that the two models present different trends mostly before 2005 (the year when PELAGO survey starts). A comparison between SPiCt estimates of harvestable biomass with catches time series (Figure \ref{spict_catches}) suggest that catches time series have a big influence on the SPiCT estimates.
 \begin{figure}[h!]
